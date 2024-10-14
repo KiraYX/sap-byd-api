@@ -3,7 +3,17 @@ import json
 from requests.exceptions import RequestException
 from rich import print as rich_print  # Import rich's print function
 from rich.json import JSON  # Import JSON class from rich
-from config import API_URL, HEADERS  # Import from the config file
+from config import HOSTNAME, ODATA_SERVICE_NAME
+
+# Base URL for the API
+API_URL = f"https://{HOSTNAME}/sap/byd/odata/cust/v1/{ODATA_SERVICE_NAME}/MaterialCollection"
+
+# Request headers
+HEADERS = {
+    'x-csrf-token': 'fetch',
+    'Authorization': 'Basic eWkueHU6SDReSCplJkV0Jmc0YnJedw==',
+    'Cookie': 'sap-XSRF_LM6_736=cGAbciVfgAzn2oZijGFFRA%3d%3d20241014023811TsiRPfpMcTi_j_dGcZkZTkRKzLGK3QoyuQiTSdPuI_A%3d; sap-usercontext=sap-language=ZH&sap-client=736'
+}
 
 # Parameters for the request
 params = {
@@ -13,7 +23,7 @@ params = {
     "$inlinecount": "allpages",
     "$select": "InternalID,LastChangeDateTime",
     "$filter": "",
-    "$top": 175
+    "$top": 2
 }
 
 # Use a session to persist connections
