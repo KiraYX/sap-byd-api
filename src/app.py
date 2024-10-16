@@ -1,26 +1,27 @@
-from sap_requests import fetch_all_material_data
+from sap_requests import fetch_all_material_data, convert_odate_to_datetime
 import json
+from datetime import datetime, timedelta
+from rich import print as rich_print  # Import rich's print function
+from rich.json import JSON  # Import JSON class from rich
 
 # Test environment
-# data = fetch_all_material_data(tenant='test')  # Default tenant is 'test', can change to 'prod'
-# if data:
-#     print(f"Total entries retrieved: {len(data)}")  # Print total number of entries retrieved
+data = fetch_all_material_data(tenant='test')  # Default tenant is 'test', can change to 'prod'
+if data:
+    print(f"Total entries retrieved: {len(data)}")  # Print total number of entries retrieved
 # rich_print(JSON.from_data(data))  # Print the JSON using rich
 
 # filter data need to modify
-from datetime import datetime, timedelta
 
-# Function to convert OData /Date(...) format to Python datetime
-def convert_odate_to_datetime(odata_date):
-    # Extract timestamp from OData format '/Date(1715846596299)/'
-    timestamp = int(odata_date.strip('/Date()')) / 1000  # Convert milliseconds to seconds
-    return datetime.fromtimestamp(timestamp)
+# datetime = convert_odate_to_datetime("/Date(1715846596299)/")
+# print(datetime)
 
 # Function to filter data based on a specified number of past hours and store the result
-def filter_by_last_hours(hours=9994):
+def filter_by_last_hours(hours=24):
     # Load data from material_data.json
     with open('data/material_data.json', 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
+
+    print({len(data)})
 
     # Get the current time and calculate the time `hours` ago
     now = datetime.now()
@@ -30,8 +31,13 @@ def filter_by_last_hours(hours=9994):
     filtered_results = []
 
     # Loop through the results and filter based on LastChangeDateTime
-    for item in data["d"]["results"]:
+    for index, item in enumerate(data["d"]["results"]):
         last_change_dt = convert_odate_to_datetime(item["LastChangeDateTime"])
+        # print(last_change_dt)
+        # print(len(filtered_results))
+
+        # Print the index along with item details for debugging purposes
+        # print(f"Processing item {index}: {item['InternalID']}") 
 
         # Check if the LastChangeDateTime is within the specified number of hours
         if last_change_dt >= past_time:

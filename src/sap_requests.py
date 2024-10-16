@@ -4,6 +4,7 @@ import os
 from requests.exceptions import RequestException
 from rich import print as rich_print  # Import rich's print function
 from rich.json import JSON  # Import JSON class from rich
+from datetime import datetime, timedelta
 from config import SAP_PROD_TENANT_HOSTNAME, SAP_TEST_TENANT_HOSTNAME, ODATA_END_POINT_MATERIAL, SAP_CREDENTIALS
 
 # Function to perform API request with tenant selection
@@ -62,12 +63,12 @@ def fetch_all_material_data(tenant='test'):
                 API_URL = next_url  # Update to the next URL for the next iteration
 
             # Create the 'data' folder if it doesn't exist
-            os.makedirs('data', exist_ok=True)
+            # os.makedirs('data', exist_ok=True)
 
             # Write the JSON data to a file in the 'data' folder
             file_path = os.path.join('data', 'material_data.json')  # Create the file path
             with open(file_path, 'w', encoding='utf-8') as json_file:
-                json.dump(data, json_file, ensure_ascii=False, indent=4)
+                json.dump(all_data_material, json_file, ensure_ascii=False, indent=4)
 
             # Return the combined data after all requests are completed
             return all_data_material
@@ -75,3 +76,9 @@ def fetch_all_material_data(tenant='test'):
         except RequestException as e:
             print(f"An error occurred: {e}")
             return None  # Return None if an error occurs
+        
+# Function to convert OData /Date(...) format to Python datetime
+def convert_odate_to_datetime(odata_date):
+    # Extract timestamp from OData format '/Date(1715846596299)/'
+    timestamp = int(odata_date.strip('/Date()')) / 1000  # Convert milliseconds to seconds
+    return datetime.fromtimestamp(timestamp)
