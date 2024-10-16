@@ -3,15 +3,15 @@ import json
 from requests.exceptions import RequestException
 from rich import print as rich_print  # Import rich's print function
 from rich.json import JSON  # Import JSON class from rich
-from config import HOSTNAME, ODATA_SERVICE_NAME, CREDENTIALS
+from config import SAP_PROD_TENANT_HOSTNAME, ODATA_END_POINT_MATERIAL, SAP_CREDENTIALS
 
 # Base URL for the API
-API_URL = f"https://{HOSTNAME}/sap/byd/odata/cust/v1/{ODATA_SERVICE_NAME}/MaterialCollection"
+API_URL = f"https://{SAP_PROD_TENANT_HOSTNAME}/sap/byd/odata/cust/v1/{ODATA_END_POINT_MATERIAL}/MaterialCollection"
 
 # Request headers
 HEADERS = {
     'x-csrf-token': 'fetch',
-    'Authorization': f'Basic {CREDENTIALS}',
+    'Authorization': f'{SAP_CREDENTIALS}',
     'Cookie': 'sap-XSRF_LM6_736=cGAbciVfgAzn2oZijGFFRA%3d%3d20241014023811TsiRPfpMcTi_j_dGcZkZTkRKzLGK3QoyuQiTSdPuI_A%3d; sap-usercontext=sap-language=ZH&sap-client=736'
 }
 
