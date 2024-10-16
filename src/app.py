@@ -27,7 +27,7 @@ def fetch_material_data(tenant='test'):
         "$format": "json",
         "sap-language": "ZH",
         "$inlinecount": "allpages",
-        "$select": "InternalID,LastChangeDateTime",
+        "$select": "InternalID,LastChangeDateTime,ObjectID",
         "$filter": "",
         # "$top": 1
     }
