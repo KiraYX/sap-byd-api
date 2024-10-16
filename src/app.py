@@ -6,8 +6,8 @@ from rich.json import JSON  # Import JSON class from rich
 
 # Test environment
 data = fetch_all_material_data(tenant='test')  # Default tenant is 'test', can change to 'prod'
-if data:
-    print(f"Total entries retrieved: {len(data)}")  # Print total number of entries retrieved
+# if data:
+#     print(f"Total entries retrieved: {len(data)}")  # Print total number of entries retrieved
 # rich_print(JSON.from_data(data))  # Print the JSON using rich
 
 # filter data need to modify
@@ -21,8 +21,6 @@ def filter_by_last_hours(hours=24):
     with open('data/material_data.json', 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
 
-    print({len(data)})
-
     # Get the current time and calculate the time `hours` ago
     now = datetime.now()
     past_time = now - timedelta(hours=hours)
@@ -31,9 +29,8 @@ def filter_by_last_hours(hours=24):
     filtered_results = []
 
     # Loop through the results and filter based on LastChangeDateTime
-    for index, item in enumerate(data["d"]["results"]):
+    for index, item in enumerate(data):
         last_change_dt = convert_odate_to_datetime(item["LastChangeDateTime"])
-        # print(last_change_dt)
         # print(len(filtered_results))
 
         # Print the index along with item details for debugging purposes
@@ -41,6 +38,8 @@ def filter_by_last_hours(hours=24):
 
         # Check if the LastChangeDateTime is within the specified number of hours
         if last_change_dt >= past_time:
+            print(item["InternalID"])
+            print(last_change_dt)
             filtered_results.append(item)
 
     # Prepare the new data structure
@@ -53,4 +52,4 @@ def filter_by_last_hours(hours=24):
     print(f"Filtered data stored in 'data/latest_updated_material.json'. Total records: {len(filtered_results)}")
 
 # Example usage
-# filter_by_last_hours(hours=24)  # You can change `hours` to any number
+filter_by_last_hours(hours=24)  # You can change `hours` to any number
