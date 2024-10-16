@@ -28,22 +28,40 @@ def fetch_material_data(tenant='test'):
         "$inlinecount": "allpages",
         "$select": "InternalID,LastChangeDateTime",
         "$filter": "",
-        "$top": 3
+        # "$top": 1
     }
 
     # Use a session to persist connections
+    all_data = []  # Initialize a list to hold all retrieved data
+
     with requests.Session() as session:
         session.headers.update(HEADERS)  # Update session with the headers
 
         try:
-            response = session.get(API_URL, params=params)  # Perform GET request
-            response.raise_for_status()  # Raise an error for bad responses (4xx or 5xx)
+            while True:
+                response = session.get(API_URL, params=params)  # Perform GET request
+                response.raise_for_status()  # Raise an error for bad responses (4xx or 5xx)
 
-            # Process the response
-            data = response.json()  # Automatically decode JSON response
-            rich_print(JSON.from_data(data))  # Print the JSON using rich
+                # Process the response
+                data = response.json()  # Automatically decode JSON response
+                rich_print(JSON.from_data(data))  # Print the JSON using rich
 
-            return data  # Return the response JSON
+                # Add the results to the all_data list
+                results = data.get("d", {}).get("results", [])
+                all_data.extend(results)  # Merge the new results
+
+                # Check if there is a __next URL to fetch more data
+                next_url = data["d"].get("__next")
+                print(f"Next URL: {next_url}")  # Print the next URL for debugging
+                
+                if not next_url:  # No more pages to fetch
+                    break
+                
+                # Update the API_URL to the next URL
+                API_URL = next_url  # Update to the next URL for the next iteration
+
+            # Return the combined data after all requests are completed
+            return all_data
 
         except RequestException as e:
             print(f"An error occurred: {e}")
@@ -52,3 +70,6 @@ def fetch_material_data(tenant='test'):
 # Example usage:
 # Test environment
 data = fetch_material_data(tenant='test')  # Default tenant is 'test', can change to 'prod'
+if data:
+    print(f"Total entries retrieved: {len(data)}")  # Print total number of entries retrieved
+# rich_print(JSON.from_data(data))  # Print the JSON using rich
