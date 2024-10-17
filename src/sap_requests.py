@@ -1,11 +1,11 @@
-import requests
-import json
 import os
-from text import split_material_description
+import json
+import requests
+from datetime import datetime, timedelta
 from requests.exceptions import RequestException
 from rich import print as rich_print  # Import rich's print function
 from rich.json import JSON  # Import JSON class from rich
-from datetime import datetime, timedelta
+from text import split_material_description
 from config import SAP_PROD_TENANT_HOSTNAME, SAP_TEST_TENANT_HOSTNAME, ODATA_END_POINT_MATERIAL, SAP_CREDENTIALS, SAP_TENANT_ACTIVE
 
 def get_tenant_hostname():
@@ -70,7 +70,7 @@ def fetch_single_material_data(interal_id):
             return None  # Return None if an error occurs
 
 # Function to perform API request with tenant selection
-def fetch_all_material_data(tenant=SAP_TENANT_ACTIVE):
+def fetch_all_material_data():
     
     # Determine the tenant hostname
     tenant_hostname = get_tenant_hostname()
