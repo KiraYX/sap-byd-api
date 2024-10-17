@@ -1,47 +1,34 @@
-from jdy_requests import find_jdy_material_by_sap_id
-from config import JDY_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
+from jdy_requests import find_jdy_material_by_sap_id, get_jdy_single_data, create_jdy_material_data, update_jdy_material_data
+from config import JDY_URL, JDY_CREDENTIALS, JDY_IDENTIFIER, MATERIAL_FIELD_MAPPING
 from rich import print as rich_print  # Import rich's print function
 import requests
 import json
     
-# Example usage of the function
-material_keys = find_jdy_material_by_sap_id(material_id=10000000)
+# # Example usage of the function
+# material_keys = find_jdy_material_by_sap_id(material_id=10000000)
 
-# Print the result
-rich_print(material_keys)
+# # Print the result
+# rich_print(material_keys)
 
-# Use jiandaoyun app, entry and data ids to get single data with all feilds
-def get_jdy_single_data(input_data):
+# # Example usage
+# input_data = material_keys['data'][0]
 
-    # Construct the payload from the input data
-    payload = {
-        "app_id": input_data.get('appId'),  # Extract app_id from input data
-        "entry_id": input_data.get('entryId'),  # Extract entry_id from input data
-        "data_id": input_data.get('_id')  # Extract data_id from input data
-    }
+# # Pass the first item from input_data to the function
+# result = get_jdy_single_data(input_data)
+# rich_print(result)  # Print the result
 
-    url = f"{JDY_URL}/data/get"  # Construct the URL
-    headers = {
-        'Authorization': JDY_CREDENTIALS,  # Use the API credentials
-        'Content-Type': 'application/json'
-    }
 
-    # Convert payload to JSON string
-    payload_json = json.dumps(payload)
+sample_data_id = "6710b0fbcc6b0c50222679d3"
+# Sample material data
+sample_material_data = {
+    MATERIAL_FIELD_MAPPING["material_id"]: {"value": "123456789"},
+    MATERIAL_FIELD_MAPPING["internal_description"]: {"value": "Test value 2"},
+    MATERIAL_FIELD_MAPPING["material_name"]: {"value": "Test Name 2"},
+    MATERIAL_FIELD_MAPPING["brand"]: {"value": "Test Brand 2"},
+    MATERIAL_FIELD_MAPPING["model_number"]: {"value": "Test Model 2"},
+}
 
-    # Make the POST request
-    response = requests.post(url, headers=headers, data=payload_json)
+rich_print(sample_material_data)
 
-    # Check for successful response
-    if response.status_code == 200:
-        return response.json()  # Return JSON data if the request was successful
-    else:
-        print(f"Error: {response.status_code} - {response.text}")  # Print error message if not successful
-        return None  # Return None if there was an error
-
-# Example usage
-input_data = material_keys
-
-# Pass the first item from input_data to the function
-result = get_jdy_single_data(input_data['data'][0])
-rich_print(result)  # Print the result
+result = update_jdy_material_data(sample_material_data, sample_data_id)
+rich_print(result)
