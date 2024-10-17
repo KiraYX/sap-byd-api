@@ -9,7 +9,3 @@ def split_material_description(description):
 
     return name, brand, model
 
-# Example usage
-description = "底座-高200mm_HFM_SO80205001"
-name, brand, model = split_material_description(description)
-print(f"Name: {name}, Brand: {brand}, Model: {model}")
