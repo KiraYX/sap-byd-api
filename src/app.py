@@ -10,6 +10,3 @@ from text import split_material_description
 from sap_requests import fetch_all_material_data, fetch_single_material_data, filter_material_by_last_hours
 
 # fetch_all_material_data()
-
-
-
