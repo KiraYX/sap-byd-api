@@ -21,7 +21,11 @@ def find_jdy_material_by_sap_id(material_id, limit=100):
         "app_id": app_id,  # Use app_id from JDY_IDENTIFIER
         "entry_id": entry_id,  # Use entry_id from JDY_IDENTIFIER
         "fields": [
-            "material_id"  # Specify the fields you want to retrieve
+            "material_id",  # Specify the fields you want to retrieve
+            "internal_description",
+            "material_name",
+            "brand",
+            "model_number"
         ],
         "filter": {
             "rel": "and",  # Logical relationship
