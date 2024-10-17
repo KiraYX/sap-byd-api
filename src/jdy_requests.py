@@ -2,13 +2,13 @@ import requests
 import json
 from config import JDY_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
 
-# Find material identifier by material ID
-def get_material_data(identifier, material_id, limit=100):
-    # Retrieve the app_id and entry_id based on the identifier
-    app_info = JDY_IDENTIFIER.get(identifier)
+# Find material identifier by material ID (without passing identifier as a parameter)
+def find_jdy_material_by_sap_id(material_id, limit=100):
+    # Use the JDY_IDENTIFIER from config (assuming we're always using 'jdy_material')
+    app_info = JDY_IDENTIFIER.get('jdy_material')
 
     if not app_info:
-        print(f"Error: Identifier '{identifier}' not found in JDY_IDENTIFIER.")
+        print(f"Error: 'jdy_material' not found in JDY_IDENTIFIER.")
         return None
 
     app_id = app_info['app_id']

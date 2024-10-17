@@ -1,7 +1,7 @@
-from jdy_requests import get_material_data
+from jdy_requests import find_jdy_material_by_sap_id
     
 # Example usage of the function
-result = get_material_data('jdy_material', material_id=10000000)
+result = find_jdy_material_by_sap_id(material_id=10000000)
 
 # Print the result
 print(result)
