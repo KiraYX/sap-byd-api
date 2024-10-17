@@ -1,3 +1,7 @@
+import os
+import json
+from rich import print as rich_print  # Import rich's print function
+
 # Split the input string by underscores
 def split_material_description(description):
     # Split the input string by underscores
