@@ -96,7 +96,7 @@ def fetch_all_material_data():
         "$format": "json",
         "sap-language": "ZH",
         "$inlinecount": "allpages",
-        "$select": "InternalID,LastChangeDateTime",
+        "$select": "InternalID,LastChangeDateTime,ObjectID",
         "$filter": ""
         # "$top": 1
     }
