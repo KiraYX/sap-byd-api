@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from requests.exceptions import RequestException
 from rich import print as rich_print  # Import rich's print function
 from rich.json import JSON  # Import JSON class from rich
-from text import split_material_description
+from text_process import split_material_description
 from config import SAP_PROD_TENANT_HOSTNAME, SAP_TEST_TENANT_HOSTNAME, ODATA_END_POINT_MATERIAL, SAP_CREDENTIALS, SAP_TENANT_ACTIVE
 
 # Decide the tenant by argument or by active tenant
