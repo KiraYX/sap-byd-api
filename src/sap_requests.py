@@ -84,7 +84,7 @@ def convert_odate_to_datetime(odata_date):
     return datetime.fromtimestamp(timestamp)
 
 # Function to filter data based on a specified number of past hours and store the result
-def filter_by_last_hours(hours=24):
+def filter_material_by_last_hours(hours=24):
     # Load data from material_data.json
     with open('data/material_data.json', 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)

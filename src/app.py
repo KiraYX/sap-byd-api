@@ -1,4 +1,4 @@
-from sap_requests import fetch_all_material_data, filter_by_last_hours
+from sap_requests import fetch_all_material_data, filter_material_by_last_hours
 import json
 from rich import print as rich_print  # Import rich's print function
 from rich.json import JSON  # Import JSON class from rich
@@ -16,4 +16,4 @@ from rich.json import JSON  # Import JSON class from rich
 
 
 # Example usage
-filter_by_last_hours(hours=24)  # You can change `hours` to any number
+filter_material_by_last_hours(hours=24)  # You can change `hours` to any number
