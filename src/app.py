@@ -19,19 +19,18 @@ from update_material import update_jdy_material_data
 # Fetch all material data from the JSON file
 material = load_json_file('material_data.json')
 
-for item in material:
+start_index = 4480
 
-    # # Take the first material for processing
-    sample_material = item
-    # rich_print(sample_material)
+# Loop through the material list starting from the specified index
+for i in range(start_index, len(material)):
+    sample_material = material[i]
 
-    # # Extract Internal ID
+    # Extract Internal ID
     internal_id = sample_material['InternalID']
     print(internal_id)
 
     # Find JDY material by SAP ID
     jdy_material = find_jdy_material_by_sap_id(internal_id)
-    # rich_print(jdy_material)
 
     # Check if JDY material exists
     if jdy_material["data"]:  # JDY material found
