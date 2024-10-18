@@ -63,10 +63,10 @@ def fetch_single_material_data(interal_id):
             material_data['ModelNumber'] = model_number
 
             # Optional: Write the data to a file (if needed)
-            file_path = os.path.join('data', f'material_{interal_id}.json')  # Create a unique file name for the material
-            with open(file_path, 'w', encoding='utf-8') as json_file:
-                json.dump(data, json_file, ensure_ascii=False, indent=4)  # Write the original data with new fields
-            print(f"Material data written to file: {file_path}")
+            # file_path = os.path.join('data', f'material_{interal_id}.json')  # Create a unique file name for the material
+            # with open(file_path, 'w', encoding='utf-8') as json_file:
+            #     json.dump(data, json_file, ensure_ascii=False, indent=4)  # Write the original data with new fields
+            # print(f"Material data written to file: {file_path}")
 
             return data  # Return the complete data including the new fields
 
