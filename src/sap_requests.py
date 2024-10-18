@@ -36,17 +36,17 @@ def fetch_single_material_data(interal_id):
     # Use a session to persist connections
     with requests.Session() as session:
         session.headers.update(HEADERS)  # Update session with the headers
-        print("Session headers updated")
+        # print("Session headers updated")
 
         try:
             # Perform GET request to fetch the single material data
             response = session.get(API_URL)  # No need for params since we're fetching a single item
             response.raise_for_status()  # Raise an error for bad responses (4xx or 5xx)
-            print("Request successful")
+            # print("Request successful")
 
             # Process the response
             data = response.json()  # Automatically decode JSON response
-            print("Response JSON decoded")
+            # print("Response JSON decoded")
 
             # Extract the material data from the response
             material_data = data.get("d", {}).get("results", [{}])[0]  # Get the first result

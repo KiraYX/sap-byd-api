@@ -13,29 +13,54 @@ from convert_json import convert_json_for_modify
 from convert_sap_json_to_jdy import convert_sap_response_to_widget_format
 from update_material import update_jdy_material_data
 
-# fetch_all_material_data()
+# Fetch all material data
+# fetch_all_material_data()   
+
+# Fetch all material data from the JSON file
 material = load_json_file('material_data.json')
-# print(material)
-sample_material = material[0]
-rich_print(sample_material)
 
-internal_id = sample_material['InternalID']
-print(internal_id)
+for item in material:
 
-jdy_material = find_jdy_material_by_sap_id(internal_id)
-rich_print(jdy_material)
+    # # Take the first material for processing
+    sample_material = item
+    # rich_print(sample_material)
 
-data_id = jdy_material["data"][0]["_id"]
-print(data_id)
+    # # Extract Internal ID
+    internal_id = sample_material['InternalID']
+    print(internal_id)
 
-sap_material = fetch_single_material_data(internal_id)
+    # Find JDY material by SAP ID
+    jdy_material = find_jdy_material_by_sap_id(internal_id)
+    # rich_print(jdy_material)
 
-rich_print(sap_material)
+    # Check if JDY material exists
+    if jdy_material["data"]:  # JDY material found
+        data_id = jdy_material["data"][0]["_id"]
+        # print(data_id)
 
-sap_data_converted = convert_sap_response_to_widget_format(sap_material)
+        # Fetch SAP material data
+        sap_material = fetch_single_material_data(internal_id)
+        # rich_print(sap_material)
 
-rich_print(sap_data_converted)
+        # Convert SAP data to the required format
+        sap_data_converted = convert_sap_response_to_widget_format(sap_material)
+        # rich_print(sap_data_converted)
 
-update_jdy = update_jdy_material_data(sap_data_converted, data_id) 
+        # Update JDY material data
+        update_jdy = update_jdy_material_data(sap_data_converted, data_id)
+        # print(update_jdy)
 
-print(update_jdy)
+    else:  # JDY material not found, create a new one
+        print("JDY material not found. Creating a new material.")
+        
+        # Fetch SAP material data
+        sap_material = fetch_single_material_data(internal_id)
+        # rich_print(sap_material)
+
+        # Convert SAP data to the required format
+        sap_data_converted = convert_sap_response_to_widget_format(sap_material)
+        # rich_print(sap_data_converted)
+
+        # Create JDY material data
+        create_jdy = create_jdy_material_data(sap_data_converted)
+        # print(create_jdy)

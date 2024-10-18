@@ -33,7 +33,7 @@ def update_jdy_material_data(material_data, data_id):
 
     # Make the POST request
     response = requests.post(url, headers=headers, data=payload)
-    print(response.text)
+    # print(response.text)
 
     # Check for a successful response and return the result
     if response.status_code == 200:
