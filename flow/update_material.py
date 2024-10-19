@@ -1,6 +1,6 @@
 import requests
 import json
-from config import JDY_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
+from conf.config import JDY_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
 
 # Update single material data
 def update_jdy_material_data(material_data, data_id):

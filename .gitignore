@@ -1,5 +1,6 @@
 venv/
 data/
-config.py
+conf/
 __pycache__/
 .vscode/
+json/

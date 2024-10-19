@@ -1,6 +1,6 @@
 import requests
 import json
-from config import JDY_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
+from conf.config import JDY_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
 
 
 

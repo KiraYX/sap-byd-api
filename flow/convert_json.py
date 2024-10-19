@@ -1,4 +1,4 @@
-from config import MATERIAL_FIELD_MAPPING
+from conf.config import MATERIAL_FIELD_MAPPING
 from rich import print as rich_print
 
 # Function to convert generic JSON data using a field mapping
