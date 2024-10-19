@@ -1,11 +1,12 @@
 import requests
 from requests.exceptions import RequestException
 from rich import print as rich_print  # Import rich's print function
-from helper import split_material_description, construct_sap_odata_url
+from helper.string_process import split_material_description
+from helper.sap_api_url import construct_sap_odata_url
 from conf.config import SAP_CREDENTIALS
-from helper import get_tenant_hostname
+from utils.json_handler import load_json_file, write_json_file
 
-def construct_sap_api_url():
+def construct_single_material_general_data_url(filter_value):
     params = {
         "odata_service": "mcmaterial",
         "entity_set": "MaterialCollection",
@@ -21,7 +22,7 @@ def construct_sap_api_url():
         ),
         "filter_property": "InternalID",
         "filter_operator": "eq",
-        "filter_value": "10013000"
+        "filter_value": filter_value
     }
 
     url = construct_sap_odata_url(params)
@@ -31,7 +32,6 @@ def get_request_headers():
     return {
         'x-csrf-token': 'fetch',
         'Authorization': f'{SAP_CREDENTIALS}',
-        'Cookie': 'sap-XSRF_LM6_736=cGAbciVfgAzn2oZijGFFRA%3d%3d20241014023811TsiRPfpMcTi_j_dGcZkZTkRKzLGK3QoyuQiTSdPuI_A%3d; sap-usercontext=sap-language=ZH&sap-client=736'
     }
 
 def process_material_data(material_data):
@@ -46,12 +46,15 @@ def process_material_data(material_data):
     return material_data
 
 def fetch_single_material_data(session, internal_id):
-    tenant_hostname = get_tenant_hostname()
-    API_URL = construct_sap_api_url()
+
+    # Construct the API URL
+    api_url = construct_single_material_general_data_url(internal_id)
+
+    # Request headers
     session.headers.update(get_request_headers())
 
     try:
-        response = session.get(API_URL)
+        response = session.get(api_url)
         response.raise_for_status()
         data = response.json()
         material_data = data.get("d", {}).get("results", [{}])[0]
@@ -63,6 +66,9 @@ def fetch_single_material_data(session, internal_id):
 
 # Testing the module
 if __name__ == "__main__":
+
+
+
     material_test = "10009999"
     with requests.Session() as session:
         # Replace '10000001' with a valid internal ID for testing
@@ -71,5 +77,6 @@ if __name__ == "__main__":
         # Print the processed material data
         if material_data:
             rich_print(material_data)
+            write_json_file('single_material_data.json', material_data)
         else:
             print("No data retrieved or an error occurred.")
