@@ -8,17 +8,6 @@ from rich.json import JSON  # Import JSON class from rich
 from text_process import split_material_description
 from conf.config import SAP_PROD_TENANT_HOSTNAME, SAP_TEST_TENANT_HOSTNAME, ODATA_END_POINT_MATERIAL, SAP_CREDENTIALS, SAP_TENANT_ACTIVE
 
-# Decide the tenant by argument or by active tenant
-def get_tenant_hostname(tenant=None):
-    # If tenant is None, use the current active tenant
-    if tenant is None:
-        tenant = SAP_TENANT_ACTIVE  # Use the current active tenant
-
-    # Determine the tenant hostname based on the provided tenant
-    tenant_hostname = SAP_TEST_TENANT_HOSTNAME if tenant == 'test' else SAP_PROD_TENANT_HOSTNAME
-    print(f"Tenant hostname determined: {tenant_hostname}")
-    return tenant_hostname
-
 def fetch_single_material_data(interal_id):
 
     tenant_hostname = get_tenant_hostname()
