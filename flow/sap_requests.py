@@ -134,11 +134,7 @@ def fetch_all_material_data():
             print(f"An error occurred: {e}")
             return None  # Return None if an error occurs
         
-# Function to convert OData /Date(...) format to Python datetime
-def convert_odate_to_datetime(odata_date):
-    # Extract timestamp from OData format '/Date(1715846596299)/'
-    timestamp = int(odata_date.strip('/Date()')) / 1000  # Convert milliseconds to seconds
-    return datetime.fromtimestamp(timestamp)
+
 
 # Function to filter data based on a specified number of past hours and store the result
 def filter_material_by_last_hours(hours=24):

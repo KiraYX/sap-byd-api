@@ -1,1 +1,2 @@
-from .select_sap_tenant import get_tenant_hostname
+from .sap_tenant import get_tenant_hostname
+from .string_process import split_material_description

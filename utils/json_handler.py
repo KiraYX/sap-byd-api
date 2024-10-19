@@ -3,6 +3,7 @@ from rich import print as rich_print
 import os
 import json
 
+# Load data from a specified JSON file
 def load_json_file(file_name):
     # Get the path to the JSON file in the 'json' folder
     json_folder_path = find_project_subfolder('sap-byd-api', 'json')
