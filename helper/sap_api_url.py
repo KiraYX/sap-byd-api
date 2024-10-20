@@ -30,7 +30,7 @@ def construct_sap_odata_url(params):
 
     # Conditionally append $filter if filter_property and filter_value are provided
     if filter_property and filter_value:
-        query += f"$filter={filter_property} {filter_operator} '{filter_value}'&"
+        query += f"$filter={filter_property} {filter_operator} {filter_value}&"
 
     # Append sap-language
     query += f"sap-language={sap_language}&"

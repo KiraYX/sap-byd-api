@@ -14,7 +14,7 @@ def get_datetime_offset(minutes=0, hours=0, days=0):
     # 获取当前时间减去指定的时间差
     past_time = datetime.now() - time_delta
     # 格式化为 OData 所需的 datetimeoffset 字符串
-    odata_format = past_time.strftime("datetimeoffset'%Y-%m-%dT%H:%M:%S.%f'Z")
+    odata_format = past_time.strftime("datetimeoffset'%Y-%m-%dT%H:%M:%S.%f0Z'")
     return odata_format
 
 def convert_odate_to_datetime(odata_date_str):

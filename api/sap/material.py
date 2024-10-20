@@ -5,10 +5,11 @@ from helper.string_process import split_material_description
 from helper.sap_api_url import construct_sap_odata_url
 from conf.config import SAP_CREDENTIALS
 from utils.json_handler import write_json_file
-from utils.date_time import convert_odate_to_datetime
+from utils.date_time import get_datetime_offset
 
 # Construct the SAP OData API URL for fetching materials with a filter
-def construct_materials_filter_url(filter_value):
+def construct_recent_updated_filter_url():
+    filter_value = get_datetime_offset(minutes=60, hours=11, days=7)
     params = {
         "odata_service": "mcmaterial",
         "entity_set": "MaterialCollection",
@@ -26,8 +27,8 @@ def construct_materials_filter_url(filter_value):
             "ProductCategoryLanguageCode"
         ),
         "expand": "",  # No expand by default
-        "filter_property": "MaterialID",
-        "filter_operator": "eq",
+        "filter_property": "LastChangeDateTime",
+        "filter_operator": "ge",
         "filter_value": filter_value
     }
     return construct_sap_odata_url(params)
@@ -75,8 +76,8 @@ def process_material_page(session, api_url):
 
 # Fetch all material data from SAP ByDesign API that match the filter
 # By specify the material ID to filter only one material
-def fetch_material_data(session, internal_id):
-    api_url = construct_materials_filter_url(internal_id)
+def fetch_recent_updated_data(session):
+    api_url = construct_recent_updated_filter_url()
     materials_data = []
     next_link = api_url
 
@@ -88,19 +89,16 @@ def fetch_material_data(session, internal_id):
 
 # Main block for testing
 if __name__ == "__main__":
-    material_test = "10013456"  # Replace with the actual internal ID or filter value
 
     with requests.Session() as session:
-        material_data_list = fetch_material_data(session, material_test)
+        material_data_list = fetch_recent_updated_data(session)
 
         # Print the processed material data
         if material_data_list:
-            if material_test:
-                # Print the filtered material data
-                rich_print(material_data_list)
-            else:
-                # Only print the count of materials when querying all materials
-                print("All materials data count:", len(material_data_list))
-            write_json_file('materials_data.json', material_data_list)
+            # Print the filtered material data
+            rich_print(material_data_list)
+            # Only print the count of materials when querying all materials
+            print("All materials data count:", len(material_data_list))
+            write_json_file('recent_updated_materials_data.json', material_data_list)
         else:
             print("No data retrieved or an error occurred.")
