@@ -15,6 +15,7 @@ def construct_sap_odata_url(params):
     filter_property = params.get("filter_property", "")
     filter_operator = params.get("filter_operator", "eq")
     filter_value = params.get("filter_value", "")
+    sap_language = params.get("sap-language", "ZH")
 
     # Construct base query
     query = f"{odata_service}/{entity_set}?"
@@ -31,6 +32,9 @@ def construct_sap_odata_url(params):
     if filter_property and filter_value:
         query += f"$filter={filter_property} {filter_operator} '{filter_value}'&"
 
+    # Append sap-language
+    query += f"sap-language={sap_language}&"
+
     # Append format as JSON
     query += "$format=json"
 
@@ -42,9 +46,10 @@ if __name__ == "__main__":
     params = {
         "odata_service": "mcmaterial",
         "entity_set": "MaterialCollection",
-        "select": "InternalID,ObjectID,Description,InternalDescription_KUT",  # Example with multiple selections
+        "sap-language": "ZH",
+        "select": "MaterialID,ObjectID,MaterialDescription,InternalDescription_KUT",  # Example with multiple selections
         "expand": "",  # No expand
-        "filter_property": "InternalID",  # Filter property and value
+        "filter_property": "MaterialID",  # Filter property and value
         "filter_operator": "eq",
         "filter_value": "10000001"
     }
