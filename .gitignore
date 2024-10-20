@@ -1,4 +1,6 @@
 venv/
 data/
-config.py
-src/__pycache__/
+conf/
+__pycache__/
+.vscode/
+json/

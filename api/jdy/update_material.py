@@ -1,6 +1,8 @@
 import requests
 import json
-from config import JDY_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
+from conf.config import JDY_API_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
+from rich import print as rich_print
+from helper.convert_json_for_modify import convert_json_for_modify
 
 # Update single material data
 def update_jdy_material_data(material_data, data_id):
@@ -15,7 +17,7 @@ def update_jdy_material_data(material_data, data_id):
     entry_id = app_info['entry_id']
 
     # API URL for creating data
-    url = f"{JDY_URL}/data/update"
+    url = f"{JDY_API_URL}/data/update"
 
     # Construct the payload
     payload = json.dumps({
@@ -25,6 +27,8 @@ def update_jdy_material_data(material_data, data_id):
         "data": material_data  # Input material data is passed here
     })
 
+    rich_print("payload: ", payload)
+
     # Headers for the request
     headers = {
         'Authorization': JDY_CREDENTIALS,
@@ -33,11 +37,13 @@ def update_jdy_material_data(material_data, data_id):
 
     # Make the POST request
     response = requests.post(url, headers=headers, data=payload)
-    # print(response.text)
+    rich_print(response.text)
 
     # Check for a successful response and return the result
     if response.status_code == 200:
+        print("response code: ", response.status_code)
         return response.json()
+        
     else:
         print(f"Error: {response.status_code} - {response.text}")
         return None
@@ -45,12 +51,13 @@ def update_jdy_material_data(material_data, data_id):
 # Main function to test
 if __name__ == "__main__":
     # Test data
-    data_id = "6710b0fbcc6b0c50222679d3"
+    data_id = "6714b65af07c954f8da5ba79"
     test_data = {
         "internal_description": "Updated Internal Description",
-        "material_name": "Updated Material Name",
-        "brand": "Updated Brand",
-        "model_number": "Updated Model Number",
+        "material_name": "Gundam",
+        "brand": "Anaheim",
+        "model_number": "RX78-II",
     }
+    test_data = convert_json_for_modify(test_data)
     
     update_jdy_material_data(test_data,data_id)
