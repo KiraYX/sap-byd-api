@@ -9,7 +9,7 @@ from utils.date_time import get_datetime_offset
 
 # Construct the SAP OData API URL for fetching materials with a filter
 def construct_recent_updated_filter_url():
-    filter_value = get_datetime_offset(minutes=60, hours=11, days=7)
+    filter_value = get_datetime_offset(minutes=1, hours=1, days=8)
     params = {
         "odata_service": "mcmaterial",
         "entity_set": "MaterialCollection",

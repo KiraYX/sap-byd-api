@@ -3,8 +3,9 @@ from rich import print as rich_print
 
 # Function to convert generic JSON data using a field mapping
 def convert_json_for_modify(input_data):
+    rich_print("Date to convert", input_data)
     converted_data = {}
-
+    
     # Loop through each key-value pair in the input data
     for field, value in input_data.items():
         # Check if the field has a mapping
@@ -13,6 +14,7 @@ def convert_json_for_modify(input_data):
             widget_id = MATERIAL_FIELD_MAPPING[field]
             converted_data[widget_id] = {"value": value}
 
+    rich_print("Converted data", converted_data)
     # Return the converted data
     return converted_data
 
