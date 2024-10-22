@@ -3,7 +3,7 @@ from rich import print as rich_print
 # Field Mapping
 MATERIAL_FIELD_MAPPING = {
     "ObjectID": "_widget_1728702222839",
-    "InternalID": "_widget_1719911600379",
+    "MaterialID": "_widget_1719911600379",
     "InternalDescription_KUT": "_widget_1719911600393",
     "Description": "_widget_1719911600380",
     "MaterialName": "_widget_1719911600381",

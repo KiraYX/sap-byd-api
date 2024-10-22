@@ -1,5 +1,8 @@
-# from helper.select_sap_tenant import get_tenant_hostname
-from helper import get_tenant_hostname
+# Update recently updated materials
+import requests
+from api.sap.material import fetch_recent_updated_data
+from flow.sync.material_sync import sync_recently_updated_materials
 
-tenant_hostname = get_tenant_hostname()
-print(tenant_hostname)
+with requests.Session() as session:
+    material_data_list = fetch_recent_updated_data(session) 
+sync_recently_updated_materials(material_data_list)
