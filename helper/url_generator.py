@@ -1,4 +1,14 @@
-from .sap_tenant import get_tenant_hostname
+from conf.config import SAP_PROD_TENANT_HOSTNAME, SAP_TEST_TENANT_HOSTNAME, SAP_TENANT_ACTIVE
+
+# Decide the tenant by argument or by active tenant
+def get_tenant_hostname(tenant=None):
+    # If tenant is None, use the current active tenant
+    if tenant is None:
+        tenant = SAP_TENANT_ACTIVE  # Use the current active tenant
+
+    # Determine the tenant hostname based on the provided tenant
+    tenant_hostname = SAP_PROD_TENANT_HOSTNAME if tenant == 'prod' else SAP_TEST_TENANT_HOSTNAME
+    return tenant_hostname
 
 # Function to construct the SAP OData API URL
 # Designed for only one criteria filter typical ID
@@ -43,6 +53,16 @@ def construct_sap_odata_url(params):
 
 if __name__ == "__main__":
 
+    # Import only for testing
+    from loguru import logger
+
+    # Decide tenant by global variable
+    active_hostname = get_tenant_hostname()
+
+    print("tenant hostname determined:", active_hostname)
+    # Use logger to print the tenant hostname
+    logger.debug("tenant hostname determined: {active_hostname}", active_hostname=active_hostname)
+
     params = {
         "odata_service": "mcmaterial",
         "entity_set": "MaterialCollection",
@@ -56,4 +76,6 @@ if __name__ == "__main__":
 
     # Construct and print the URL
     url = construct_sap_odata_url(params)
-    print(url)
+
+    # Use logger to print the URL
+    logger.debug(url)

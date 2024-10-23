@@ -1,9 +1,7 @@
-from utils.json_handler import load_json_file
+from utils.json_processor import load_json_file
 from api.jdy.material import fetch_jdy_material_by_sap_id
 from rich import print as rich_print
 import requests
-import json
-from helper.convert_json_for_modify import convert_json_for_modify
 from helper.convert_json_sap_to_jdy import convert_sap_response_to_widget_format
 from api.jdy.create_material import create_jdy_material_data    
 from api.jdy.update_material import update_jdy_material_data

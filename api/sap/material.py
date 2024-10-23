@@ -2,9 +2,9 @@ import requests
 from requests.exceptions import RequestException
 from rich import print as rich_print
 from helper.string_process import split_material_description
-from helper.sap_api_url import construct_sap_odata_url
+from helper.url_generator import construct_sap_odata_url
 from conf.config import SAP_CREDENTIALS
-from utils.json_handler import write_json_file
+from utils.json_processor import write_json_file
 from utils.date_time import get_datetime_offset
 
 # Construct the SAP OData API URL for fetching materials with a filter
