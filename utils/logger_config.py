@@ -1,3 +1,5 @@
+# Deprecated due to the use of loguru, just for archiving
+
 import logging
 from colorlog import ColoredFormatter
 import json

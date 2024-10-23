@@ -1,4 +1,4 @@
-from utils import find_project_subfolder
+from utils.path_finder import find_project_subfolder
 from rich import print as rich_print
 import os
 import json

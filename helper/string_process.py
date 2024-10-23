@@ -1,5 +1,6 @@
 # Split the input string by underscores
 # For Mujin sap naming convention
+
 def split_material_description(description):
     # Split the input string by underscores
     parts = description.split('_')
