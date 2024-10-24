@@ -25,15 +25,14 @@ def sync_recently_updated_materials(data_to_sync, debug=False):
         for index, item in enumerate(data_to_sync):
 
             # Print current loop index
-            if debug:
-                print("Current index: ", index)
+            print("Current index: ", index)
+
             if debug:
                 rich_print("item", item)
 
             current_material_id = item['MaterialID']
 
-            if debug:
-                print("Current material id: ", current_material_id)
+            print("Current material id: ", current_material_id)
 
             current_material = fetch_jdy_material_by_sap_id(current_material_id, session)
 
@@ -45,10 +44,12 @@ def sync_recently_updated_materials(data_to_sync, debug=False):
             if debug:
                 print("is current found in jdy: ", is_current_found)
 
+            current_jdy_id = current_material['data'][0]['_id']
+
             # Update the material data if exists
             if is_current_found:
                 print("Updating material data...")
-                update_jdy = update_jdy_material_data(data_for_edit[index], current_material_id)
+                update_jdy = update_jdy_material_data(material_data=data_for_edit[index], data_id=current_jdy_id, debug=False)
                 if debug:
                     rich_print(update_jdy)
             else:
@@ -63,4 +64,4 @@ if __name__ == "__main__":
     # Load data from JSON file
     data_to_sync = load_json_file('recent_updated_materials_data.json')
     rich_print("Loaded json", data_to_sync[0])
-    sync_recently_updated_materials(data_to_sync, debug=True)
+    sync_recently_updated_materials(data_to_sync, debug=False)

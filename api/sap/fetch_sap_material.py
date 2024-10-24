@@ -1,8 +1,8 @@
 import requests
-from rich import print as rich_print
-from helper.string_process import split_material_description
-from helper.url_generator import construct_sap_odata_url
 from conf.config import SAP_CREDENTIALS
+from rich import print as rich_print
+from helper.url_generator import construct_sap_odata_url
+from helper.string_process import split_material_description
 from utils.json_processor import write_json_file
 from utils.date_time import get_datetime_offset
 
@@ -76,8 +76,8 @@ def process_material_page(session, api_url):
 
 # Fetch all material data from SAP ByDesign API that match the filter
 # By specify the material ID to filter only one material
-def fetch_recent_updated_data(session):
-    api_url = construct_recent_updated_filter_url(days=2)
+def fetch_recent_updated_data(session, days=2):
+    api_url = construct_recent_updated_filter_url(days)
     materials_data = []
     next_link = api_url
 
@@ -91,12 +91,12 @@ def fetch_recent_updated_data(session):
 if __name__ == "__main__":
 
     with requests.Session() as session:
-        material_data_list = fetch_recent_updated_data(session)
+        material_data_list = fetch_recent_updated_data(session, days=2000)
  
         # Print the processed material data
         if material_data_list:
             # Print the filtered material data
-            rich_print(material_data_list)
+            rich_print(material_data_list[0])
             # Only print the count of materials when querying all materials
             print("All materials data count:", len(material_data_list))
             write_json_file('recent_updated_materials_data.json', material_data_list)

@@ -2,7 +2,6 @@ from utils.path_finder import find_project_subfolder
 from rich import print as rich_print
 import os
 import json
-from loguru import logger
 
 # Format JSON data
 def format_json(data):
@@ -63,6 +62,3 @@ if __name__ == '__main__':
 
     # Format the data
     formatted_data = format_json(sample_material_data)
-
-    # Print the formatted data
-    logger.debug(formatted_data)
