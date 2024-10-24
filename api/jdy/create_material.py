@@ -2,7 +2,7 @@ import requests
 import json
 from conf.config import JDY_API_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
 from rich import print as rich_print
-from helper.convert_json_for_modify import convert_json_for_modify
+from helper.json_converter import convert_jdy_json_to_widget_format
 
 # Create single material data
 def create_jdy_material_data(material_data):
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     }
 
     # Convert the material data
-    converted_material_data = convert_json_for_modify(material_data)
+    converted_material_data = convert_jdy_json_to_widget_format(material_data)
 
     # Create the material data
     created_data = create_jdy_material_data(converted_material_data)

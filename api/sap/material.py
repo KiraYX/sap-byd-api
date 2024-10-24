@@ -1,5 +1,4 @@
 import requests
-from requests.exceptions import RequestException
 from rich import print as rich_print
 from helper.string_process import split_material_description
 from helper.url_generator import construct_sap_odata_url

@@ -2,7 +2,7 @@ import requests
 import json
 from conf.config import JDY_API_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
 from rich import print as rich_print
-from helper.convert_json_for_modify import convert_json_for_modify
+from helper.json_converter import convert_jdy_json_to_widget_format
 
 # Update single material data
 def update_jdy_material_data(material_data, data_id):
@@ -58,6 +58,6 @@ if __name__ == "__main__":
         "brand": "Anaheim",
         "model_number": "RX78-II",
     }
-    test_data = convert_json_for_modify(test_data)
+    test_data = convert_jdy_json_to_widget_format(test_data)
     
     update_jdy_material_data(test_data,data_id)
