@@ -1,15 +1,14 @@
 import requests
-from requests.exceptions import RequestException
-from rich import print as rich_print
-from helper.string_process import split_material_description
-from helper.sap_api_url import construct_sap_odata_url
 from conf.config import SAP_CREDENTIALS
-from utils.json_handler import write_json_file
+from rich import print as rich_print
+from helper.url_generator import construct_sap_odata_url
+from helper.string_process import split_material_description
+from utils.json_processor import write_json_file
 from utils.date_time import get_datetime_offset
 
 # Construct the SAP OData API URL for fetching materials with a filter
-def construct_recent_updated_filter_url():
-    filter_value = get_datetime_offset(minutes=1, hours=1, days=8)
+def construct_recent_updated_filter_url(days):
+    filter_value = get_datetime_offset(minutes=1, hours=1, days=days)
     params = {
         "odata_service": "mcmaterial",
         "entity_set": "MaterialCollection",
@@ -55,6 +54,7 @@ def process_material_description(material_data):
 
     return material_data
 
+# Utilize pagination to fetch large data, limit is 1000 entries per page
 def process_material_page(session, api_url):
     session.headers.update(get_request_headers())
     response = session.get(api_url)
@@ -76,8 +76,8 @@ def process_material_page(session, api_url):
 
 # Fetch all material data from SAP ByDesign API that match the filter
 # By specify the material ID to filter only one material
-def fetch_recent_updated_data(session):
-    api_url = construct_recent_updated_filter_url()
+def fetch_recent_updated_data(session, days=2):
+    api_url = construct_recent_updated_filter_url(days)
     materials_data = []
     next_link = api_url
 
@@ -91,12 +91,12 @@ def fetch_recent_updated_data(session):
 if __name__ == "__main__":
 
     with requests.Session() as session:
-        material_data_list = fetch_recent_updated_data(session)
-
+        material_data_list = fetch_recent_updated_data(session, days=2000)
+ 
         # Print the processed material data
         if material_data_list:
             # Print the filtered material data
-            rich_print(material_data_list)
+            rich_print(material_data_list[0])
             # Only print the count of materials when querying all materials
             print("All materials data count:", len(material_data_list))
             write_json_file('recent_updated_materials_data.json', material_data_list)

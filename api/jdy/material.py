@@ -1,5 +1,4 @@
 import requests
-import json
 from conf.config import JDY_API_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
 from rich import print as rich_print
 
@@ -59,8 +58,6 @@ def fetch_jdy_material_by_sap_id(material_id, session, limit=100):
     else:
         print(f"Error: {response.status_code} - {response.text}")  # Print error message if not successful
         return None  # Return None if there was an error
-
-
 
 if __name__ == "__main__":
     # Create a session

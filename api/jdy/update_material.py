@@ -2,10 +2,10 @@ import requests
 import json
 from conf.config import JDY_API_URL, JDY_CREDENTIALS, JDY_IDENTIFIER
 from rich import print as rich_print
-from helper.convert_json_for_modify import convert_json_for_modify
+from helper.json_converter import convert_jdy_json_to_widget_format
 
 # Update single material data
-def update_jdy_material_data(material_data, data_id):
+def update_jdy_material_data(material_data, data_id, debug=False):
     # Fetch app_id and entry_id from JDY_IDENTIFIER for 'jdy_material'
     app_info = JDY_IDENTIFIER.get('jdy_material')
     
@@ -27,7 +27,8 @@ def update_jdy_material_data(material_data, data_id):
         "data": material_data  # Input material data is passed here
     })
 
-    rich_print("payload: ", payload)
+    if debug:
+        rich_print("payload: ", payload)
 
     # Headers for the request
     headers = {
@@ -37,7 +38,9 @@ def update_jdy_material_data(material_data, data_id):
 
     # Make the POST request
     response = requests.post(url, headers=headers, data=payload)
-    rich_print(response.text)
+
+    if debug:
+        rich_print("Update response: ", response.text)
 
     # Check for a successful response and return the result
     if response.status_code == 200:
@@ -51,13 +54,13 @@ def update_jdy_material_data(material_data, data_id):
 # Main function to test
 if __name__ == "__main__":
     # Test data
-    data_id = "6714b65af07c954f8da5ba79"
+    data_id = "671a0532b59c93a4fc92f1cd"
     test_data = {
         "internal_description": "Updated Internal Description",
         "material_name": "Gundam",
         "brand": "Anaheim",
         "model_number": "RX78-II",
     }
-    test_data = convert_json_for_modify(test_data)
+    test_data = convert_jdy_json_to_widget_format(test_data)
     
-    update_jdy_material_data(test_data,data_id)
+    update_jdy_material_data(test_data, data_id, debug=True)

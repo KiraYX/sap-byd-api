@@ -1,9 +1,8 @@
 import requests
 from conf.config import JDY_API_URL, JDY_CREDENTIALS
-from rich import print as rich_print
 
 # Use jiandaoyun app, entry and data ids to get single data with all fields
-def get_jdy_single_data(input_data, session):
+def fetch_jdy_single_data_by_id(input_data, session):
 
     # Construct the payload from the input data
     payload = {
@@ -29,15 +28,20 @@ def get_jdy_single_data(input_data, session):
         return None  # Return None if there was an error
     
 if __name__ == "__main__":
+    
+    from rich import print as rich_print
+
     # Create a session
     with requests.Session() as session:
+
+        # Within sample data only the 3 IDs are required
         sample_data = {
-            'material_id': '10012345',
-            'internal_description': '快换接头_SMC_KQ2H08-G02A',
+            # 'material_id': '10012345',
+            # 'internal_description': '快换接头_SMC_KQ2H08-G02A',
             '_id': '6683e2b3f99e5bc64e8b6fa3',
             'appId': '6683c4a2399857dff128b206',
             'entryId': '6683c4b0ae4fd18278021f46'
         }
  
-        material_data = get_jdy_single_data(sample_data, session)
+        material_data = fetch_jdy_single_data_by_id(sample_data, session)
         rich_print(material_data)
