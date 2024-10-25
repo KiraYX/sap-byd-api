@@ -91,7 +91,7 @@ def fetch_recent_updated_data(session, days=2):
 if __name__ == "__main__":
 
     with requests.Session() as session:
-        material_data_list = fetch_recent_updated_data(session, days=2000)
+        material_data_list = fetch_recent_updated_data(session, days=2)
  
         # Print the processed material data
         if material_data_list:

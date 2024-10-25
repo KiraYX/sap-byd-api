@@ -44,14 +44,16 @@ def sync_recently_updated_materials(data_to_sync, debug=False):
             if debug:
                 print("is current found in jdy: ", is_current_found)
 
-            current_jdy_id = current_material['data'][0]['_id']
+            
 
             # Update the material data if exists
             if is_current_found:
-                print("Updating material data...")
-                update_jdy = update_jdy_material_data(material_data=data_for_edit[index], data_id=current_jdy_id, debug=False)
-                # if debug:
-                rich_print(update_jdy)
+                if len(current_material['data']) > 0:
+                    current_jdy_id = current_material['data'][0]['_id']
+                    print("Updating material data...")
+                    update_jdy = update_jdy_material_data(material_data=data_for_edit[index], data_id=current_jdy_id, debug=False)
+                    # if debug:
+                    rich_print(update_jdy)
             else:
                 print("Material data not found. Creating a new material.")
                 if debug:
