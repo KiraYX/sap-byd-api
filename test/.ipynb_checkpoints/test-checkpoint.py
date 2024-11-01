@@ -34,12 +34,5 @@ columns_to_keep = ['所属装配体', '布局号', 'PLM编号', '层级深度', 
 # Select only these columns
 df_bom = df_bom[columns_to_keep]
 
-# Use the style method to enhance DataFrame visualization
-styled_df = df_bom.style.set_table_attributes('style="width:100%; border-collapse:collapse;"') \
-                    .set_properties(**{'text-align': 'left', 'padding': '8px'}) \
-                    .highlight_max(color='lightgreen') \
-                    .highlight_min(color='lightcoral')
-
-styled_df
-
-print(df_bom)
+with pd.option_context('display.max_columns', None):
+  print(df_bom.head())
