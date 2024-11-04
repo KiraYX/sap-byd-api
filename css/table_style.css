@@ -1,0 +1,53 @@
+/* table_style.css */
+
+/* Set a dark background for the entire page */
+body {
+    background-color: #222; /* Darker background for the page */
+    color: white;           /* Default text color */
+    margin: 0;             /* Remove default margin */
+    font-family: Arial, sans-serif; /* Font style */
+    height: 100vh;         /* Ensure body takes full height of the viewport */
+}
+
+.table-container {
+    height: 100vh; /* Full height of the viewport */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    border: 1px solid #555; /* Optional: Add border around the table */
+}
+
+/* Custom scrollbar styles */
+.table-container::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #555; /* Color of the scrollbar handle */
+    border-radius: 6px; /* Rounded corners for the handle */
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #333; /* Background color of the scrollbar track */
+}
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background-color: #333; /* Dark gray background for the table */
+}
+
+th, td {
+    padding: 8px;
+    border: 1px solid #555; /* Darker gray border for grids */
+    text-align: left;
+}
+
+th {
+    background-color: #444; /* Darker background for header */
+    position: sticky;       /* Stick header */
+    top: 0;                 /* Stick to the top of the container */
+    z-index: 10;           /* Ensure it appears above table rows */
+}
+
+tr:nth-child(even) {
+    background-color: #3d3d3d; /* Slightly darker for even rows */
+}
