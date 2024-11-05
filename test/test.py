@@ -1,45 +1,53 @@
 import pandas as pd
-import warnings
+import re
 
-# Temporarily display all columns
+# Sample data for df_bom_cleaned
+data = {
+    'PLM编号': [
+        '1.1', '1.1', '1.1', '1.1', '1.2', '1.2', '1.3', '1.3', '1.3', '1.3', 
+        '1.3.1', '1.3.1', '1.3.2', '1.3.2', '1.4', '1.4', '1.4', '1.4', '1.4', 
+        '1.4.1', '1.4.1'
+    ],
+    'Value': range(21)
+}
+df_bom_cleaned = pd.DataFrame(data)
 
-# Suppress specific UserWarning from Pandas
-warnings.filterwarnings("ignore", category=UserWarning, message="Data Validation extension is not supported")
+# Function to assign group numbers based on PLM编号 with custom grouping
+def assign_group_numbers(df, group_column, max_items_per_group=20):
+    # Step 1: Extract primary groups and subgroup identifiers
+    df['PrimaryGroup'] = df[group_column].apply(lambda x: '.'.join(x.split('.')[:2]))  # e.g., '1.1', '1.2', etc.
+    
+    # Initialize Group column
+    df['GroupNumber'] = None
+    
+    # Step 2: Assign primary group numbers based on grouping logic
+    group_number = 10  # Starting from 10, 20, etc., per rule
+    for primary, primary_group in df.groupby('PrimaryGroup'):
+        primary_idx = primary_group.index.tolist()
+        
+        # If primary group size is within the limit, assign directly
+        if len(primary_idx) <= max_items_per_group:
+            df.loc[primary_idx, 'GroupNumber'] = group_number
+        else:
+            # Step 3: Create sub-groups if primary group size exceeds the limit
+            # Extract subgroups within the primary group
+            sub_number = group_number  # e.g., start with 10, 20
+            subgroup_count = 1
+            
+            # Group by '1.3.1', '1.3.2' etc., after the first level in '1.3'
+            for subgroup, subgroup_df in primary_group.groupby(group_column):
+                subgroup_idx = subgroup_df.index.tolist()
+                
+                # Split into smaller chunks if subgroup itself is too large
+                for i in range(0, len(subgroup_idx), max_items_per_group):
+                    df.loc[subgroup_idx[i:i+max_items_per_group], 'GroupNumber'] = sub_number + subgroup_count
+                    subgroup_count += 1
+        
+        # Move to next primary group number
+        group_number += 10
 
-# Read the BOM sheet with header in row 2
-file_path = "data/bom275.xlsx"
-sheet_name = "BOM"
-df_bom = pd.read_excel(file_path, sheet_name=sheet_name, header=1)
+    return df
 
-
-# Drop rows where all cells are NaN
-df_bom = df_bom.dropna(how="all")
-# Drop columns where all values are NaN
-df_bom = df_bom.dropna(axis=1, how="all")
-
-
-# Display the total number of rows and columns
-print("Total rows and columns:", df_bom.shape)
-
-# Replace 'ColumnName' with the actual name of the column up to which you want to keep
-last_column_to_keep = "备注"
-
-# List all column names
-column_names = df_bom.columns.tolist()
-# print(column_names)
-
-# Specify the columns you want to keep
-columns_to_keep = ['所属装配体', '布局号', 'PLM编号', '层级深度', '父层级', '整套总数', 'ERP编号', '物料描述', '单层数量', '单位', '物料种类']
-
-# Select only these columns
-df_bom = df_bom[columns_to_keep]
-
-# Use the style method to enhance DataFrame visualization
-styled_df = df_bom.style.set_table_attributes('style="width:100%; border-collapse:collapse;"') \
-                    .set_properties(**{'text-align': 'left', 'padding': '8px'}) \
-                    .highlight_max(color='lightgreen') \
-                    .highlight_min(color='lightcoral')
-
-styled_df
-
-print(df_bom)
+# Apply the function to your DataFrame
+df_bom_cleaned = assign_group_numbers(df_bom_cleaned, 'PLM编号')
+print(df_bom_cleaned[['PLM编号', 'GroupNumber']])
