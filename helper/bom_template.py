@@ -1,10 +1,15 @@
 from openpyxl import load_workbook
 import re
+import os
 
 def write_df_to_excel(df, file_name, sheet_name, start_row=8, start_col=1):
 
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    excel_file_path = os.path.join(base_path, f"../data/{file_name}")
+
+
     # Specify the path to your Excel file
-    excel_file_path = f'../data/{file_name}'
+    # excel_file_path = f'../data/{file_name}'
 
     # Load the existing workbook
     book = load_workbook(excel_file_path)
