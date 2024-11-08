@@ -7,11 +7,15 @@ from helper.bom_template import write_df_to_excel
 # Suppress specific UserWarning from Pandas
 warnings.filterwarnings("ignore", category=UserWarning, message="Data Validation extension is not supported")
 
-# Set base path to the script's directory
-base_path = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(base_path, "../data/bom275.xlsx")
-sheet_name = "BOM"
-df_bom_origin = pd.read_excel(file_path, sheet_name=sheet_name, header=1)
+# Load the Excel file to dataframe
+def load_data_frame_from_excel(file_name, sheet_name):
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_path, f"../data/{file_name}.xlsx")
+    sheet_name = sheet_name
+    df_bom = pd.read_excel(file_path, sheet_name=sheet_name, header=1)
+    return df_bom
+
+df_bom_origin = load_data_frame_from_excel("bom275","BOM")
 
 # Drop rows where all cells are NaN
 df_bom_origin = df_bom_origin.dropna(how="all")
@@ -228,6 +232,8 @@ html_output = f"""<!DOCTYPE html>
     </div>
 </body>
 </html>"""
+
+base_path = os.path.dirname(os.path.abspath(__file__))
 
 # Write the HTML with linked CSS to a file
 with open(os.path.join(base_path, "../html/bom_data_preview.html"), "w") as f:
