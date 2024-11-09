@@ -48,8 +48,11 @@ def construct_sap_odata_url(params):
     # Append format as JSON
     query += "$format=json"
 
+    query_url = f"https://{tenant_hostname}/sap/byd/odata/cust/v1/{query}"
+    print("Query URL:", query_url)
+
     # Return the complete URL
-    return f"https://{tenant_hostname}/sap/byd/odata/cust/v1/{query}"
+    return query_url
 
 if __name__ == "__main__":
 

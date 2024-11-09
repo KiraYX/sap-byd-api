@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 2px;
+        }
+
+        .node text {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 1px;
+        }
+
+        .node-button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="tree-container"></div>
+
+    <script>
+        // Sample tree data
+        const data = {
+            name: "Company",
+            children: [
+                {
+                    name: "Engineering",
+                    children: [
+                        { name: "Development Team" },
+                        { name: "QA Team" },
+                        { name: "DevOps Team" }
+                    ]
+                },
+                {
+                    name: "Finance",
+                    children: [
+                        { name: "Accounting" },
+                        { name: "Budget Planning" }
+                    ]
+                },
+                {
+                    name: "HR",
+                    children: [
+                        { name: "Recruitment" },
+                        { name: "Training" },
+                        { name: "Employee Relations" }
+                    ]
+                }
+            ]
+        };
+
+        // Set up dimensions
+        const margin = { top: 20, right: 20, bottom: 20, left: 40 };
+        const width = 800 - margin.left - margin.right;
+        const height = 600 - margin.top - margin.bottom;
+        const nodeHeight = 30;
+        const nodeIndent = 50;
+
+        // Create SVG container
+        const svg = d3.select("#tree-container")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Create tree layout
+        const tree = d3.tree()
+            .nodeSize([nodeHeight, nodeIndent]);
+
+        // Create hierarchy from data
+        const root = d3.hierarchy(data);
+
+        // Initialize position and collapsed state
+        let i = 0;
+        root.eachBefore(d => {
+            d.x = i * nodeHeight;
+            d.y = d.depth * nodeIndent;
+            i++;
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            }
+        });
+
+        // Toggle children function
+        function toggleChildren(d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update(d);
+        }
+
+        // Update function
+        function update(source) {
+            // Update tree layout
+            const nodes = root.descendants();
+            let i = 0;
+            nodes.forEach(d => {
+                d.x = i * nodeHeight;
+                d.y = d.depth * nodeIndent;
+                i++;
+            });
+
+            // Update nodes
+            const node = svg.selectAll(".node")
+                .data(nodes, d => d.id || (d.id = ++i));
+
+            const nodeEnter = node.enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            nodeEnter.append("circle")
+                .attr("r", 6)
+                .attr("class", "node-button")
+                .on("click", (event, d) => toggleChildren(d));
+
+            nodeEnter.append("text")
+                .attr("dy", "0.35em")
+                .attr("x", 12)
+                .text(d => d.data.name);
+
+            // Update existing nodes
+            node.transition()
+                .duration(500)
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            // Remove old nodes
+            node.exit()
+                .transition()
+                .duration(500)
+                .remove();
+
+            // Update node appearance
+            svg.selectAll(".node circle")
+                .attr("fill", d => d._children ? "lightsteelblue" : "#fff");
+        }
+
+        // Initial update
+        update(root);
+
+        // Click root node to expand initially
+        toggleChildren(root);
+    </script>
+</body>
+</html>
