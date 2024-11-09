@@ -1,5 +1,4 @@
 from openpyxl import load_workbook
-import re
 import os
 
 def write_df_to_excel(df, file_name, sheet_name, start_row=8, start_col=1):

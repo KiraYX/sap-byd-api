@@ -4,11 +4,17 @@ from rich import print as rich_print
 from helper.url_generator import construct_sap_odata_url
 from helper.string_process import split_material_description
 from utils.json_processor import write_json_file
-from utils.date_time import get_datetime_offset
+from utils.date_time import get_datetime_offset, format_odata_datatime, read_last_update_datetime, save_current_datetime_to_file
 
 # Construct the SAP OData API URL for fetching materials with a filter
-def construct_recent_updated_filter_url(days):
-    filter_value = get_datetime_offset(minutes=1, hours=1, days=days)
+def construct_recent_updated_filter_url():
+
+    last_update_time = read_last_update_datetime()
+    print("Last update time:", last_update_time)
+    # Shift 8 hours to match UTC time, and add 3 minutes to make a small overlap
+    filter_from_time = get_datetime_offset(last_update_time, minutes=3, hours=8, days=0)
+    print("Filter from time:", filter_from_time)
+    filter_time_odata = format_odata_datatime(filter_from_time)
     params = {
         "odata_service": "mcmaterial",
         "entity_set": "MaterialCollection",
@@ -28,7 +34,7 @@ def construct_recent_updated_filter_url(days):
         "expand": "",  # No expand by default
         "filter_property": "LastChangeDateTime",
         "filter_operator": "ge",
-        "filter_value": filter_value
+        "filter_value": filter_time_odata
     }
     return construct_sap_odata_url(params)
 
@@ -76,8 +82,8 @@ def process_material_page(session, api_url):
 
 # Fetch all material data from SAP ByDesign API that match the filter
 # By specify the material ID to filter only one material
-def fetch_recent_updated_data(session, days=2):
-    api_url = construct_recent_updated_filter_url(days)
+def fetch_recent_updated_data(session):
+    api_url = construct_recent_updated_filter_url()
     materials_data = []
     next_link = api_url
 
@@ -85,13 +91,14 @@ def fetch_recent_updated_data(session, days=2):
         materials_batch, next_link = process_material_page(session, next_link)
         materials_data.extend(materials_batch)
 
+    save_current_datetime_to_file()
     return materials_data
 
 # Main block for testing
 if __name__ == "__main__":
 
     with requests.Session() as session:
-        material_data_list = fetch_recent_updated_data(session, days=2)
+        material_data_list = fetch_recent_updated_data(session)
  
         # Print the processed material data
         if material_data_list:
