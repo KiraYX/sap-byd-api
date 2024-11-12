@@ -14,7 +14,7 @@ def run_sync_job():
 scheduler = BlockingScheduler()
 
 # Schedule the job to run every 5 minutes
-scheduler.add_job(run_sync_job, 'interval', minutes=1)
+scheduler.add_job(run_sync_job, 'interval', minutes=10)
 
 if __name__ == "__main__":
     print("Starting the scheduler...")
