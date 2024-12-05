@@ -1,6 +1,14 @@
 from openpyxl import load_workbook
 import os
 
+# Load the Excel file to dataframe
+def load_data_frame_from_excel(file_name, sheet_name):
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_path, f"../data/{file_name}.xlsx")
+    sheet_name = sheet_name
+    df_bom = pd.read_excel(file_path, sheet_name=sheet_name, header=1)
+    return df_bom
+
 def write_df_to_excel(df, file_name, sheet_name, start_row=8, start_col=1):
 
     base_path = os.path.dirname(os.path.abspath(__file__))

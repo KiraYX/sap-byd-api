@@ -2,26 +2,19 @@ import os
 import numpy as np
 import pandas as pd
 import warnings
-from helper.bom_template import write_df_to_excel
+from helper.bom_template import write_df_to_excel, load_data_frame_from_excel
 
 # Suppress specific UserWarning from Pandas
 warnings.filterwarnings("ignore", category=UserWarning, message="Data Validation extension is not supported")
 
-# Load the Excel file to dataframe
-def load_data_frame_from_excel(file_name, sheet_name):
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(base_path, f"../data/{file_name}.xlsx")
-    sheet_name = sheet_name
-    df_bom = pd.read_excel(file_path, sheet_name=sheet_name, header=1)
-    return df_bom
-
-df_bom_origin = load_data_frame_from_excel("bom275","BOM")
+df_bom_origin = load_data_frame_from_excel("A201-00-0000-0-工程BOM(2F)-V25待发布","BOM")
 
 # Drop rows where all cells are NaN
 df_bom_origin = df_bom_origin.dropna(how="all")
 # Drop columns where all values are NaN
 df_bom_origin = df_bom_origin.dropna(axis=1, how="all")
-
+# Drop rows where the column '整套总数' is 0
+df_bom_origin = df_bom_origin[df_bom_origin['整套总数'] != 0]
 
 # Display the total number of rows and columns
 print("Original Total rows and columns:", df_bom_origin.shape)
@@ -41,8 +34,8 @@ df_bom_cleaned = df_bom_cleaned.copy()
 # Now you can add the new column without the warning
 df_bom_cleaned['名称'] = df_bom_cleaned['物料描述'].str.split('_', expand=True)[0]
 
-# Drop rows where 'PLM编号' not start with 1
-df_bom_cleaned = df_bom_cleaned[df_bom_cleaned['PLM编号'].str.startswith('1')]
+# Drop rows where 'PLM编号' not start with 1, special for 275 BOM
+# df_bom_cleaned = df_bom_cleaned[df_bom_cleaned['PLM编号'].str.startswith('1')]
 
 # Function to remove the part after the 3rd dot, with string conversion
 def truncate_plm(plm):
@@ -92,7 +85,8 @@ df_bom_cleaned['整套总数'] = df_bom_cleaned['整套总数'] / 4
 df_bom_cleaned.drop(columns=['名称', '组编号', '父层级'], inplace=True)
 
 # Drop rows where 'ERP编号' does not match the 8-digit pattern
-df_bom_cleaned = df_bom_cleaned[df_bom_cleaned['ERP编号'].str.match(r'^\d{8}$')]
+# df_bom_cleaned = df_bom_cleaned[df_bom_cleaned['ERP编号'].str.match(r'^\d{8}$')]
+df_bom_cleaned = df_bom_cleaned[df_bom_cleaned['ERP编号'].astype(str).str.match(r'^\d{8}$', na=False)]
 
 # Function to find the ERP编号 of the 产成品 based on PLM编号
 def find_finished_product(plm编号):
@@ -214,7 +208,7 @@ df_bom_variable_description = pd.DataFrame({
     '变量描述': '初始'
 })
 
-df_bom_preview = df_bom_variable
+df_bom_preview = df_bom_cleaned
 
 # Generate the HTML table without inline styles
 html_output = df_bom_preview.to_html(index=False)  # Convert DataFrame to HTML without row indices
